@@ -1,0 +1,134 @@
+@extends('layouts.app')
+
+@section('title', 'Tambah Mahasiswa')
+
+@section('content')
+    <div class="space-y-6">
+        {{-- Header --}}
+        <div>
+            <h3 class="text-2xl font-bold mb-2">➕ Tambah Mahasiswa Baru</h3>
+            <p class="text-slate-500 dark:text-slate-400">
+                Isi data mahasiswa baru dengan lengkap dan pastikan informasi sesuai.
+            </p>
+        </div>
+
+        {{-- Validasi Error --}}
+        @if ($errors->any())
+            <div
+                class="p-4 rounded-xl bg-red-100/80 border border-red-300 text-red-800 dark:bg-red-700/40 dark:text-red-100 text-sm">
+                <ul class="list-disc list-inside space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- Form Tambah --}}
+        <div class="rounded-xl shadow-sm bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-3 font-semibold rounded-t-xl">
+                Formulir Tambah Mahasiswa
+            </div>
+
+            <form action="{{ route('admin.mahasiswa.store') }}" method="POST" class="p-6 space-y-5">
+                @csrf
+
+                {{-- NIM --}}
+                <div>
+                    <label for="nim"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">NIM</label>
+                    <input type="text" id="nim" name="nim" value="{{ old('nim') }}"
+                        class="w-full p-2 rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        required>
+                </div>
+
+                {{-- Nama Lengkap --}}
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nama
+                        Lengkap</label>
+                    <input type="text" id="nama" name="nama" value="{{ old('nama') }}"
+                        class="w-full p-2  rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        required>
+                </div>
+
+                {{-- Email --}}
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email
+                        (Login)</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}"
+                        class="w-full p-2  rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        required>
+                </div>
+
+                {{-- Password --}}
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        Password (Min. 3 karakter)
+                    </label>
+                    <input type="password" id="password" name="password"
+                        class="w-full p-2  rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        required>
+                </div>
+
+                {{-- Angkatan --}}
+                <div>
+                    <label for="angkatan"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Angkatan</label>
+                    <input type="number" id="angkatan" name="angkatan" value="{{ old('angkatan', date('Y')) }}"
+                        class="w-full p-2  rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        required>
+                </div>
+
+                {{-- Jurusan --}}
+                <div>
+                    <label for="jurusan_id"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Jurusan</label>
+                    <select id="jurusan_id" name="jurusan_id"
+                        class="w-full p-2  rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="">-- Pilih Jurusan --</option>
+                        @foreach ($jurusans as $jurusan)
+                            <option value="{{ $jurusan->id ?? $jurusan->jurusan_id }}">
+                                {{ $jurusan->nama_jurusan }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('jurusan_id')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <hr class="border-slate-200 dark:border-slate-700">
+
+                {{-- Kelas --}}
+                <div>
+                    <label for="id_kelas"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Kelas</label>
+                    <select id="id_kelas" name="id_kelas"
+                        class="w-full p-2  rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition mb-2">
+                        <option value="">-- Pilih Kelas --</option>
+                        @foreach ($kelas as $k)
+                            <option value="{{ $k->id ?? $k->id_kelas }}">
+                                {{ $k->nama_kelas }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('id_kelas')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Tombol Aksi --}}
+                <div class="flex items-center gap-3 pt-4">
+                    <button type="submit"
+                        class="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-sm transition">
+                        💾 Simpan Data
+                    </button>
+                    <a href="{{ route('admin.mahasiswa.index') }}"
+                        class="px-5 py-2 text-sm font-medium text-slate-700 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-100 rounded-lg transition">
+                        Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
