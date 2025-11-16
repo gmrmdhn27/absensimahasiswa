@@ -427,7 +427,7 @@ class AdminController extends Controller
         }
 
         JadwalKuliah::create([
-            "id_mata_kuliah" => $request->kode_mk,
+            "id_mata_kuliah" => $mataKuliah->id,
             "id_kelas" => $request->id_kelas,
             "nip" => $request->nip_dosen, // ✅ Menggunakan NIP Dosen yang sedang login
             "tanggal" => $request->tanggal,
