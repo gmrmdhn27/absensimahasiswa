@@ -126,9 +126,19 @@
             <header
                 class="w-full p-4 bg-white/80 dark:bg-gray-800/80 shadow-sm border-b border-gray-100 dark:border-gray-700 backdrop-blur">
                 <h1 class="text-xl font-semibold">@yield('title', 'Dashboard')</h1>
+                {{-- <p>Gema, Didik, Andi</p> --}}
             </header>
 
             <main class="flex-1 p-8 overflow-y-auto">
+                <div class="flex w-full justify-center align-items-center mb-5">
+                    <div class="w-full bg-gray-800/80 py-3 px-3 rounded-xl shadow-md shadow-indigo-600">
+                        <h1 class="text-2xl mb-5">This System Made By&trade;</h1>
+                        <p>Gema Ramadhan</p>
+                        <p>Didik Kusuma Rahmat</p>
+                        <p>M. Andi Yanuar Ibrahim</p>
+                    </div>
+                </div>
+
                 <div class="w-full">
                     @yield('content')
                 </div>
