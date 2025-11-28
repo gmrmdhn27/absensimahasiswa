@@ -15,11 +15,14 @@
 
         <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-400"></div>
     </div>
-    <div id="app" class="min-h-screen flex w-full">
+    <div id="app" class="min-h-screen w-full md:flex md:overflow-x-hidden">
 
         {{-- Sidebar desktop --}}
         <aside id="sidebar"
-            class="hidden md:flex flex-col w-64 bg-white/80 dark:bg-slate-800/80 border-r border-slate-200 dark:border-slate-700 backdrop-blur p-4 justify-between">
+            class="hidden sm:flex sm:w-64 sm:flex-col
+       bg-white/80 dark:bg-slate-800/80
+       border-r border-slate-200 dark:border-slate-700
+       backdrop-blur p-4 justify-between">
 
             {{-- Logo & Judul --}}
             <div class="flex items-center gap-3 px-2 mb-4">
@@ -146,6 +149,35 @@
         </div>
     </div>
 
+    {{-- Modal Konfirmasi Hapus --}}
+    <div id="delete-modal"
+        class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+        aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div
+            class="w-full max-w-md transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-slate-800">
+            <h3 class="text-lg font-bold leading-6 text-slate-900 dark:text-slate-100" id="modal-title">
+                Konfirmasi Penghapusan
+            </h3>
+            <div class="mt-2">
+                <p class="text-sm text-slate-500 dark:text-slate-400" id="modal-body">
+                    Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.
+                </p>
+            </div>
+
+            <form id="delete-form" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" id="close-modal-btn"
+                        class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-100 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-lg transition">Batal</button>
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">Ya,
+                        Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- Script toggle sidebar mobile --}}
     <script>
         const btn = document.getElementById('btn-open-sidebar');
@@ -167,8 +199,46 @@
                 });
             }, 100);
         });
+
+        // Logika Modal Hapus
+        const deleteModal = document.getElementById('delete-modal');
+        if (deleteModal) {
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const deleteForm = document.getElementById('delete-form');
+            const modalBody = document.getElementById('modal-body');
+
+            document.querySelectorAll('.open-delete-modal').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const url = this.getAttribute('data-url');
+                    const name = this.getAttribute('data-name');
+
+                    // Set action form
+                    deleteForm.setAttribute('action', url);
+
+                    // Set pesan konfirmasi
+                    modalBody.innerHTML =
+                        `Apakah Anda yakin ingin menghapus data <strong>${name}</strong>? Tindakan ini tidak dapat dibatalkan.`;
+
+                    // Tampilkan modal
+                    deleteModal.classList.remove('hidden');
+                    deleteModal.classList.add('flex');
+                });
+            });
+
+            const closeModal = () => {
+                deleteModal.classList.add('hidden');
+                deleteModal.classList.remove('flex');
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) {
+                    closeModal();
+                }
+            });
+        }
     </script>
 </body>
-
 
 </html>

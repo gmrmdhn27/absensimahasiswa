@@ -93,9 +93,12 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
     Route::get('/dashboard', [DosenController::class, 'index'])->name('dashboard');
 
     // Rute lain yang relevan untuk Dosen
-    Route::get('/jadwal-mengajar', [DosenController::class, 'jadwalMengajar'])->name('jadwal_mengajar');
-    Route::post('/input-absensi/{id_jadwal}', [DosenController::class, 'inputAbsensi'])->name('input_absensi');
-    Route::get('/form-absensi/{id_jadwal}', [DosenController::class, 'showAbsensiForm'])->name('show_absensi_form');
+    // GET /dosen/jadwal-mengajar
+    Route::get('/jadwal-mengajar', [DosenController::class, 'jadwalMengajar'])->name('jadwal-mengajar');
+    // GET /dosen/form-absensi/{id_jadwal}
+    Route::get('/form-absensi/{id_jadwal}', [DosenController::class, 'showAbsensiForm'])->name('form-absensi');
+    // POST /dosen/input-absensi/{id_jadwal}
+    Route::post('/input-absensi/{id_jadwal}', [DosenController::class, 'inputAbsensi'])->name('input-absensi');
 });
 
 

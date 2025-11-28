@@ -50,7 +50,7 @@ class DosenController extends Controller
     // --------------------------------------------------------------------------
     // Rute Jadwal Mengajar: /dosen/jadwal-mengajar (dosen.jadwal_mengajar)
     // --------------------------------------------------------------------------
-    public function jadwalMengajar()
+    public function jadwalMengajar(Request $request)
     {
         $dosen = $this->getDosen();
 
@@ -59,11 +59,17 @@ class DosenController extends Controller
         }
 
         // Ambil semua jadwal kuliah yang diampu oleh dosen ini (menggunakan NIP)
-        $jadwals = JadwalKuliah::with(['mataKuliah', 'kelas'])
-                                ->where('nip', $dosen->nip)
-                                ->orderBy('tanggal', 'desc')
-                                ->orderBy('waktu_mulai')
-                                ->paginate(10);
+        $query = JadwalKuliah::with(['mataKuliah', 'kelas'])
+                             ->where('nip', $dosen->nip);
+
+        // Terapkan filter tanggal jika ada input dari request
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        $jadwals = $query->orderBy('tanggal', 'desc')
+                         ->orderBy('waktu_mulai', 'asc')
+                         ->paginate(10)->withQueryString(); // withQueryString() agar filter tetap ada saat pindah halaman paginasi
 
         return view('dosen.jadwal-mengajar', compact('dosen', 'jadwals'));
     }
@@ -148,8 +154,8 @@ class DosenController extends Controller
                 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
             });
 
-            return redirect()->route('dosen.jadwal_mengajar')->with('success',
-                "Absensi berhasil disimpan untuk Jadwal ID: {$id_jadwal}.");
+            return redirect()->route('dosen.jadwal-mengajar')->with('success',
+                "Absensi berhasil disimpan");
 
         } catch (\Exception $e) {
             // Aktifkan kembali Foreign Key Checks jika terjadi kegagalan

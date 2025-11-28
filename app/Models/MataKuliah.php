@@ -17,7 +17,7 @@ class MataKuliah extends Model
 
     protected $keyType = 'string';
 
-    public function jadwal() {
-        return $this->hasMany(JadwalKuliah::class);
+    public function jadwalKuliahs() {
+        return $this->hasMany(JadwalKuliah::class, 'id_mata_kuliah', 'kode_mk');
     }
 }

@@ -52,6 +52,7 @@
                             <th class="px-4 py-3">Dosen Pengajar</th>
                             <th class="px-4 py-3">Tanggal</th>
                             <th class="px-4 py-3">Mulai</th>
+                            <th class="px-4 py-3">Selesai</th>
                             <th class="px-4 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -69,20 +70,18 @@
                                 <td class="px-4 py-3">{{ $jadwal->dosen->nama ?? 'N/A' }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->tanggal }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->waktu_mulai }}</td>
+                                <td class="px-4 py-3">{{ $jadwal->waktu_selesai }}</td>
                                 <td class="px-4 py-3 text-center space-x-2">
                                     <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}" method="POST"
-                                        class="inline-block" onsubmit="return confirm('Hapus jadwal ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                        data-url="{{ route('admin.jadwal.destroy', $jadwal->id) }}"
+                                        data-name="Jadwal {{ $jadwal->mataKuliah->nama_mk ?? 'N/A' }} kelas {{ $jadwal->kelas->nama_kelas ?? 'N/A' }}">
+                                        Hapus
+                                    </button>
                                 </td>
                             </tr>
                         @empty

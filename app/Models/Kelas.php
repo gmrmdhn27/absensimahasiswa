@@ -11,7 +11,7 @@ class Kelas extends Model
 
     protected $fillable = ["nama_kelas", "tahun_ajaran", "semester"];
 
-    public function mahasiswa() {
+    public function mahasiswas() {
         return $this->belongsToMany(Mahasiswa::class, "kelas_mahasiswas", "nim", "id_kelas")->using(KelasMahasiswa::class);
     }
 

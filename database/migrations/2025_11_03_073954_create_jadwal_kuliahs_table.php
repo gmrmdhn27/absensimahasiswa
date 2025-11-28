@@ -22,6 +22,7 @@ return new class extends Migration
                 ->onDelete('cascade')->onUpdate("cascade");
             $table->date("tanggal");
             $table->time("waktu_mulai");
+            $table->time("waktu_selesai");
             $table->timestamps();
         });
     }

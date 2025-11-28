@@ -38,7 +38,7 @@
         </div>
 
         {{-- Form --}}
-        <form action="{{ route('dosen.input_absensi', ['id_jadwal' => $jadwal->id]) }}" method="POST" class="space-y-6">
+        <form action="{{ route('dosen.input-absensi', ['id_jadwal' => $jadwal->id]) }}" method="POST" class="space-y-6">
             @csrf
 
             {{-- Tabel Mahasiswa --}}
@@ -98,7 +98,7 @@
 
             {{-- Tombol Aksi --}}
             <div class="flex justify-end items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
-                <a href="{{ route('dosen.jadwal_mengajar') }}"
+                <a href="{{ route('dosen.jadwal-mengajar') }}"
                     class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700 transition">
                     Batal
                 </a>

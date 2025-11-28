@@ -646,12 +646,13 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property string $waktu_mulai
      * @property string $tanggal
      * @property int $id_kelas
      * @property int $id_mata_kuliah
      * @property string $nip
      * @property int $id
+     * @property-read mixed $waktu_mulai
+     * @property-read mixed $waktu_selesai
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Absensi> $absensi
      * @property-read int|null $absensi_count
      * @property-read \App\Models\MataKuliah $mataKuliah
@@ -662,7 +663,6 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereIdMataKuliah($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereIdKelas($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereTanggal($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereWaktuMulai($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah newModelQuery()
@@ -1291,8 +1291,8 @@ namespace App\Models {
      * @property string $tahun_ajaran
      * @property string $nama_kelas
      * @property int $id
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Mahasiswa> $mahasiswa
-     * @property-read int|null $mahasiswa_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Mahasiswa> $mahasiswas
+     * @property-read int|null $mahasiswas_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JadwalKuliah> $jadwalKuliah
      * @property-read int|null $jadwalKuliah_count
      * @method static \Illuminate\Database\Eloquent\Builder<Kelas>|Kelas whereId($value)
@@ -2249,8 +2249,8 @@ namespace App\Models {
      * @property string $nama_mk
      * @property string $kode_mk
      * @property int $id
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JadwalKuliah> $jadwal
-     * @property-read int|null $jadwal_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JadwalKuliah> $jadwalKuliahs
+     * @property-read int|null $jadwalKuliahs_count
      * @method static \Illuminate\Database\Eloquent\Builder<MataKuliah>|MataKuliah whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<MataKuliah>|MataKuliah whereKodeMk($value)
      * @method static \Illuminate\Database\Eloquent\Builder<MataKuliah>|MataKuliah whereNamaMk($value)

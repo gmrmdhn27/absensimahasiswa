@@ -66,7 +66,7 @@
             </div>
 
             {{-- Lihat Detail Jadwal --}}
-            <a href="{{ route('dosen.jadwal_mengajar') }}"
+            <a href="{{ route('dosen.jadwal-mengajar') }}"
                 class="block bg-gradient-to-br from-emerald-500 to-green-500 text-white p-6 rounded-2xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
                 <div class="flex items-center justify-between">
                     <div>

@@ -34,24 +34,31 @@ class AdminController extends Controller
     }
 
     // Mahasiswa
-    public function mahasiswaIndex() {
-        $query = Mahasiswa::with("user", "jurusan");
+    public function mahasiswaIndex(Request $request)
+    {
+        // Ambil data jurusan untuk dropdown filter
+        $jurusans = Jurusan::orderBy('nama_jurusan')->get();
 
-        if(request("jurusan_id")) { // Filter harus menggunakan Kode Jurusan
-            $query->where("jurusan_id", request("jurusan_id"));
-        }
+        // Mulai query Mahasiswa dengan relasi yang dibutuhkan
+        $query = Mahasiswa::with(['user', 'jurusan']);
 
-        if(request("id_kelas")) {
-            $query->whereHas('kelas', function($q) {
-                $q->where('id_kelas', request('id_kelas'));
+        // Terapkan filter pencarian (search) jika ada
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('nama', 'like', "%{$searchTerm}%")
+                  ->orWhere('nim', 'like', "%{$searchTerm}%");
             });
         }
 
-        $mahasiswas = $query->paginate(10);
+        // Terapkan filter jurusan jika ada
+        if ($request->filled('jurusan')) {
+            $query->where('jurusan_id', $request->jurusan);
+        }
 
-        return view("admin.mahasiswa.index", compact(
-            "mahasiswas"
-        ));
+        $mahasiswas = $query->orderBy('nama', 'asc')->paginate(10)->withQueryString();
+
+        return view("admin.mahasiswa.index", compact('mahasiswas', 'jurusans'));
     }
 
     public function mahasiswaCreate() {
@@ -166,35 +173,33 @@ class AdminController extends Controller
     }
 
     // Dosen
-    public function dosenIndex() {
+    public function dosenIndex(Request $request)
+    {
         $query = Dosen::with("user", "jadwalKuliahs");
 
         // Filter by fakultas
-        if (request('departemen')) {
-            $query->where('departemen', request('departemen'));
+        if ($request->filled('departemen')) {
+            $query->where('departemen', $request->departemen);
         }
 
         // Search
-        if (request('search')) {
-            $search = request('search');
+        if ($request->filled('search')) {
+            $search = $request->search;
             $query->where(function($q) use ($search) {
                 // 1. Search berdasarkan Nama Dosen (Kolom 'Nama_Dosen' di tabel Dosen)
                 $q->where('nama', 'like', "%{$search}%")
                 // 2. Search berdasarkan NIP (Kolom 'NIP' di tabel Dosen)
                 ->orWhere('nip', 'like', "%{$search}%")
                 // 3. Search berdasarkan Email (menggunakan relasi 'user')
-                ->orWhereHas('user', function($userQuery) use ($search) {
+                ->orWhereHas('user', function ($userQuery) use ($search) {
                     $userQuery->where('email', 'like', "%{$search}%");
                 });
-                // Hapus orWhere('email') dan orWhere('nip') di query utama karena sudah dihandle di atas
             });
         }
 
-        $dosens = $query->latest()->paginate(10);
+        $dosens = $query->orderBy('nama', 'asc')->paginate(10)->withQueryString();
 
-        return view("admin.dosen.index", compact(
-            "dosens"
-        ));
+        return view("admin.dosen.index", compact('dosens'));
     }
 
     public function dosenCreate() {
@@ -283,11 +288,12 @@ class AdminController extends Controller
 
     // Matkul
 
-    public function mataKuliahIndex() {
+    public function mataKuliahIndex(Request $request)
+    {
         $query = MataKuliah::query();
 
-        if (request('search')) {
-            $search = request('search');
+        if ($request->filled('search')) {
+            $search = $request->search;
             $query->where(function($q) use ($search) {
                 // Mencari berdasarkan Nama MK atau Kode MK
                 $q->where('nama_mk', 'like', "%{$search}%")
@@ -295,9 +301,8 @@ class AdminController extends Controller
             });
         }
 
-        $mataKuliahs = $query->latest('kode_mk')->paginate(10); // Mengurutkan berdasarkan Kode_MK terbaru
-
-        return view("admin.matakuliah.index", compact("mataKuliahs"));
+        $mataKuliahs = $query->orderBy('nama_mk', 'asc')->paginate(10)->withQueryString();
+        return view("admin.matakuliah.index", compact('mataKuliahs'));
     }
 
     public function mataKuliahCreate() {
@@ -359,7 +364,7 @@ class AdminController extends Controller
 
         // PENTING: Pastikan tidak ada Jadwal Kuliah yang menggunakan Kode_MK ini
         // Jika ada, Anda harus mengatur cascading delete atau mencegah penghapusan
-        if ($mk->jadwalKuliah()->exists()) {
+        if ($mk->jadwalKuliahs()->exists()) {
             return redirect()->route("admin.matakuliah.index")
                 ->with("error", "Mata Kuliah tidak dapat dihapus karena masih digunakan dalam Jadwal Kuliah.");
         }
@@ -375,16 +380,21 @@ class AdminController extends Controller
         // Eager loading semua relasi FK
         $query = JadwalKuliah::with(['mataKuliah', 'kelas', 'dosen']);
 
-        // Filter dan Search bisa ditambahkan di sini (misal filter berdasarkan Hari atau Dosen)
+        // Ambil tanggal dari request, jika tidak ada, gunakan tanggal hari ini.
+        $tanggalFilter = request('tanggal', now()->toDateString());
 
-        $jadwalKuliahs = $query->latest('tanggal')->paginate(10);
+        // Terapkan filter berdasarkan tanggal
+        $query->whereDate('tanggal', $tanggalFilter);
+
+        // Urutkan berdasarkan waktu mulai
+        $jadwalKuliahs = $query->orderBy('waktu_mulai')->paginate(10);
 
         // Siapkan data FK untuk view filtering/creating
         $mataKuliahs = MataKuliah::all();
         $dosens = Dosen::all();
         $kelas = Kelas::all();
 
-        return view("admin.jadwalkuliah.index", compact("jadwalKuliahs", "mataKuliahs", "dosens", "kelas"));
+        return view("admin.jadwalkuliah.index", compact("jadwalKuliahs", "mataKuliahs", "dosens", "kelas", "tanggalFilter"));
     }
 
     public function jadwalKuliahCreate() {
@@ -416,7 +426,8 @@ class AdminController extends Controller
             "id_kelas" => "required|exists:kelas,id",
             'nip_dosen' => "required|exists:dosens,nip",
             "tanggal" => "required|date",
-            "waktu_mulai" => "required|date_format:H:i", // Format Jam:Menit
+            "waktu_mulai" => "required|date_format:H:i",
+            "waktu_selesai" => "required|date_format:H:i"
         ]);
 
         $mataKuliah = MataKuliah::where('kode_mk', $request->kode_mk)->first();
@@ -432,6 +443,7 @@ class AdminController extends Controller
             "nip" => $request->nip_dosen, // ✅ Menggunakan NIP Dosen yang sedang login
             "tanggal" => $request->tanggal,
             "waktu_mulai" => $request->waktu_mulai,
+            "waktu_selesai" => $request->waktu_selesai,
         ]);
 
         return redirect()->route("admin.jadwal.index")
@@ -449,6 +461,7 @@ class AdminController extends Controller
             "nip_dosen" => "required|exists:dosens,nip",
             "tanggal" => "required|date",
             "waktu_mulai" => "required|date_format:H:i",
+            "waktu_selesai" => "required|date_format:H:i"
         ]);
 
         $jadwal->update([
@@ -457,6 +470,7 @@ class AdminController extends Controller
             "nip" => $request->nip_dosen,
             "tanggal" => $request->tanggal,
             "waktu_mulai" => $request->waktu_mulai,
+            "waktu_selesai" => $request->waktu_selesai
         ]);
 
         return redirect()->route("admin.jadwal.index")

@@ -79,16 +79,12 @@
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.matakuliah.destroy', $mk->kode_mk) }}" method="POST"
-                                        class="inline-block"
-                                        onsubmit="return confirm('Yakin hapus MK {{ $mk->nama_mk }}?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                        data-url="{{ route('admin.matakuliah.destroy', $mk->kode_mk) }}"
+                                        data-name="{{ $mk->nama_mk }} ({{ $mk->kode_mk }})">
+                                        Hapus
+                                    </button>
                                 </td>
                             </tr>
                         @empty

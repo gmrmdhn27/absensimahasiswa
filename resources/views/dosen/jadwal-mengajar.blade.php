@@ -27,6 +27,29 @@
             </div>
         @endif
 
+        {{-- Form Filter Tanggal --}}
+        <div class="p-4 rounded-xl bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <form action="{{ route('dosen.jadwal-mengajar') }}" method="GET"
+                class="flex flex-col sm:flex-row items-center gap-4">
+                <div class="w-full sm:w-auto">
+                    <label for="tanggal" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pilih
+                        Tanggal:</label>
+                    <input type="date" id="tanggal" name="tanggal" value="{{ request('tanggal') }}"
+                        class="block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex items-center gap-2 mt-2 sm:mt-5">
+                    <button type="submit"
+                        class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Filter
+                    </button>
+                    <a href="{{ route('dosen.jadwal-mengajar') }}"
+                        class="inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+
         {{-- Tabel Jadwal --}}
         <div
             class="rounded-xl overflow-hidden shadow-sm bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
@@ -51,7 +74,11 @@
                             <tr
                                 class="border-t border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
                                 <td class="px-4 py-3 font-medium text-slate-800 dark:text-slate-100">
-                                    {{ $loop->iteration + $jadwals->firstItem() - 1 }}
+                                    @if ($jadwals instanceof \Illuminate\Pagination\AbstractPaginator)
+                                        {{ $loop->iteration + $jadwals->firstItem() - 1 }}
+                                    @else
+                                        {{ $loop->iteration }}
+                                    @endif
                                 </td>
                                 <td class="px-4 py-3">
                                     {{ $jadwal->mataKuliah->nama_mk ?? 'N/A' }}
@@ -69,7 +96,7 @@
                                     {{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }} WIB
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                    <a href="{{ route('dosen.show_absensi_form', $jadwal->id) }}"
+                                    <a href="{{ route('dosen.form-absensi', $jadwal->id) }}"
                                         class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-3 py-2 rounded-lg transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -83,7 +110,11 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="px-4 py-6 text-center text-slate-500 dark:text-slate-400 text-sm">
-                                    Anda tidak memiliki jadwal mengajar saat ini.
+                                    @if (request()->filled('tanggal'))
+                                        Tidak ada jadwal mengajar ditemukan untuk tanggal yang dipilih.
+                                    @else
+                                        Silakan pilih tanggal terlebih dahulu untuk menampilkan jadwal.
+                                    @endif
                                 </td>
                             </tr>
                         @endforelse
@@ -94,7 +125,9 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $jadwals->links() }}
+            @if ($jadwals instanceof \Illuminate\Pagination\AbstractPaginator)
+                {{ $jadwals->links() }}
+            @endif
         </div>
     </div>
 @endsection

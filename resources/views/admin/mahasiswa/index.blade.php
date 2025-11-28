@@ -26,6 +26,46 @@
             </div>
         @endif
 
+        {{-- Form Filter dan Pencarian --}}
+        <div class="p-4 rounded-xl bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <form action="{{ route('admin.mahasiswa.index') }}" method="GET"
+                class="flex flex-col sm:flex-row items-end gap-4">
+                {{-- Input Pencarian --}}
+                <div class="w-full sm:flex-1">
+                    <label for="search" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        Cari Mahasiswa (Nama/NIM)
+                    </label>
+                    <input type="text" id="search" name="search" value="{{ request('search') }}"
+                        placeholder="Masukkan Nama atau NIM..."
+                        class="block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+
+                {{-- Filter Jurusan --}}
+                <div class="w-full sm:flex-1">
+                    <label for="jurusan" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        Filter Berdasarkan Jurusan
+                    </label>
+                    <select id="jurusan" name="jurusan"
+                        class="block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">Semua Jurusan</option>
+                        @foreach ($jurusans as $jurusan)
+                            <option value="{{ $jurusan->id }}" {{ request('jurusan') == $jurusan->id ? 'selected' : '' }}>
+                                {{ $jurusan->nama_jurusan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Tombol Aksi --}}
+                <div class="flex items-center gap-2">
+                    <button type="submit"
+                        class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Filter</button>
+                    <a href="{{ route('admin.mahasiswa.index') }}"
+                        class="inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Reset</a>
+                </div>
+            </form>
+        </div>
+
         {{-- Tombol Tambah --}}
         <div class="flex justify-between items-center">
             <a href="{{ route('admin.mahasiswa.create') }}"
@@ -73,21 +113,22 @@
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.mahasiswa.destroy', $mhs->id) }}" method="POST"
-                                        class="inline-block" onsubmit="return confirm('Yakin hapus {{ $mhs->nama }}?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                        data-url="{{ route('admin.mahasiswa.destroy', $mhs->id) }}"
+                                        data-name="{{ $mhs->nama }}">
+                                        Hapus
+                                    </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center py-4 text-slate-600 dark:text-slate-300">
-                                    Data Mahasiswa tidak ditemukan.
+                                    @if (request()->has('search') || request()->has('jurusan'))
+                                        Data mahasiswa tidak ditemukan dengan kriteria pencarian Anda.
+                                    @else
+                                        Belum ada data mahasiswa.
+                                    @endif
                                 </td>
                             </tr>
                         @endforelse

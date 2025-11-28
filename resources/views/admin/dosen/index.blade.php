@@ -84,15 +84,12 @@
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.dosen.destroy', $dosen->id) }}" method="POST"
-                                        class="inline-block" onsubmit="return confirm('Yakin hapus {{ $dosen->nama }}?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                        data-url="{{ route('admin.dosen.destroy', $dosen->id) }}"
+                                        data-name="{{ $dosen->nama }}">
+                                        Hapus
+                                    </button>
                                 </td>
                             </tr>
                         @empty

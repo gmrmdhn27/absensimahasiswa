@@ -107,6 +107,18 @@
                     @enderror
                 </div>
 
+                <div>
+                    <label for="waktu_selesai"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Waktu
+                        Selesai</label>
+                    <input type="time" id="waktu_selesai" name="waktu_selesai" value="{{ old('waktu_selesai') }}"
+                        required
+                        class="w-full p-2 rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition mb-2">
+                    @error('waktu_selesai')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Tombol --}}
                 <div class="flex gap-2">
                     <button type="submit"

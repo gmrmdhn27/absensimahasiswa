@@ -4,8 +4,8 @@
         <li><a href="{{ route('dosen.dashboard') }}"
                 class="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('dosen.dashboard') ? 'bg-slate-100 dark:bg-slate-700 font-semibold' : '' }}">🏠
                 <span>Dashboard</span></a></li>
-        <li><a href="{{ route('dosen.jadwal_mengajar') }}"
-                class="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('dosen.jadwal_mengajar') ? 'bg-slate-100 dark:bg-slate-700 font-semibold' : '' }}">📅
+        <li><a href="{{ route('dosen.jadwal-mengajar') }}"
+                class="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('dosen.jadwal-mengajar') ? 'bg-slate-100 dark:bg-slate-700 font-semibold' : '' }}">📅
                 <span>Jadwal & Absensi</span></a></li>
     </ul>
 </div>

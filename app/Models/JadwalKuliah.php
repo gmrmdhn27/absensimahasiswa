@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class JadwalKuliah extends Model
 {
     use HasFactory;
-    protected $fillable = ["id_mata_kuliah", "id_kelas", "tanggal", "waktu_mulai", "nip"];
+    protected $fillable = ["id_mata_kuliah", "id_kelas", "tanggal", "waktu_mulai", "waktu_selesai", "nip"];
     public function absensi() {
         return $this->hasMany(Absensi::class, "id_jadwal");
     }
@@ -23,5 +23,16 @@ class JadwalKuliah extends Model
 
     public function kelas() {
         return $this->belongsTo(Kelas::class, "id_kelas");
+    }
+
+    // Accessor untuk memformat waktu_mulai menjadi HH:MM
+    public function getWaktuMulaiAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('H:i');
+    }
+    // Accessor untuk memformat waktu_selesai menjadi HH:MM
+    public function getWaktuSelesaiAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('H:i');
     }
 }
