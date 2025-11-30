@@ -646,23 +646,23 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $waktu_selesai
+     * @property string $waktu_mulai
      * @property string $tanggal
      * @property int $id_kelas
-     * @property int $id_mata_kuliah
      * @property string $nip
+     * @property string $id_mata_kuliah
      * @property int $id
-     * @property-read mixed $waktu_mulai
-     * @property-read mixed $waktu_selesai
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Absensi> $absensi
-     * @property-read int|null $absensi_count
-     * @property-read \App\Models\MataKuliah $mataKuliah
      * @property-read \App\Models\Dosen $dosen
+     * @property-read \App\Models\MataKuliah $mataKuliah
      * @property-read \App\Models\Kelas $kelas
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereNip($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereIdMataKuliah($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereNip($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereIdKelas($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereTanggal($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereWaktuMulai($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereWaktuSelesai($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah newModelQuery()

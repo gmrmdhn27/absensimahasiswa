@@ -4,38 +4,47 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
+        // 1. Admin
         User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'), // Password yang di-hash
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('admin'),
             'role' => 'admin',
         ]);
 
-        $dosenUser = User::create([
-            'name' => 'Rusli Kurniawan',
-            'email' => 'rusli@gmail.com',
-            'password' => Hash::make('dosen'),
-            'role' => 'dosen',
-            // ⭐ HAPUS BARIS INI: 'nip' => '12345678',
-        ]);
+        // 2. Dosen (7 Dosen)
+        $dosens = [
+            ['nip' => '198201102005011001', 'nama' => 'Dr. Budi Santoso', 'departemen' => 'Teknik Informatika'],
+            ['nip' => '197905152003122002', 'nama' => 'Prof. Citra Lestari', 'departemen' => 'Sistem Informasi'],
+            ['nip' => '198503202008011005', 'nama' => 'Ahmad Dahlan, M.Kom.', 'departemen' => 'Teknik Informatika'],
+            ['nip' => '199011012015032001', 'nama' => 'Rina Hartati, M.Sc.', 'departemen' => 'Teknik Informatika'],
+            ['nip' => '198808252014041002', 'nama' => 'Eko Prasetyo, Ph.D.', 'departemen' => 'Sistem Informasi'],
+            ['nip' => '199207192019032003', 'nama' => 'Fitriani, S.Kom., M.T.', 'departemen' => 'Teknik Informatika'],
+            ['nip' => '198602142010121003', 'nama' => 'Gunawan, M.Eng.', 'departemen' => 'Sistem Informasi'],
+        ];
 
-        Dosen::create([
-            'user_id' => $dosenUser->id,
-            'nip' => '12345678', // NIP hanya ada di tabel Dosen
-            'nama' => 'Rusli Kurniawan',
-            'departemen' => 'Teknik Informatika',
-        ]);
+        foreach ($dosens as $dosenData) {
+            $user = User::create([
+                'name' => $dosenData['nama'],
+                'email' => strtolower(str_replace(['.', ' ', ','], '', explode(' ', $dosenData['nama'])[0])) . '@example.com',
+                'password' => Hash::make('dosen'),
+                'role' => 'dosen',
+            ]);
+
+            Dosen::create([
+                'nip' => $dosenData['nip'],
+                'nama' => $dosenData['nama'],
+                'departemen' => $dosenData['departemen'],
+                'user_id' => $user->id,
+            ]);
+        }
     }
 }

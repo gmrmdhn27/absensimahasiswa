@@ -139,7 +139,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $mahasiswas->links('pagination::tailwind') }}
+            {{ $mahasiswas->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection

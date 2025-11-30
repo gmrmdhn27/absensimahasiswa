@@ -59,18 +59,19 @@ class DosenController extends Controller
         }
 
         // Ambil semua jadwal kuliah yang diampu oleh dosen ini (menggunakan NIP)
-        $query = JadwalKuliah::with(['mataKuliah', 'kelas'])
-                             ->where('nip', $dosen->nip);
+        $query = $dosen->jadwalKuliahs() // Memulai query dari relasi
+                       ->with(['mataKuliah', 'kelas']); // Eager load relasi lain yang dibutuhkan
 
         // Terapkan filter tanggal jika ada input dari request
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
         }
 
-        $jadwals = $query->orderBy('tanggal', 'desc')
+        $jadwals = $query->orderBy('tanggal', 'asc')
                          ->orderBy('waktu_mulai', 'asc')
                          ->paginate(10)->withQueryString(); // withQueryString() agar filter tetap ada saat pindah halaman paginasi
 
+        // Kirim juga tanggal yang sedang difilter ke view
         return view('dosen.jadwal-mengajar', compact('dosen', 'jadwals'));
     }
 

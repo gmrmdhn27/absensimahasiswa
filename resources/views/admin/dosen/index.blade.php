@@ -106,7 +106,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $dosens->links('pagination::tailwind') }}
+            {{ $dosens->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection

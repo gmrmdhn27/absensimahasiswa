@@ -101,7 +101,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $mataKuliahs->links('pagination::tailwind') }}
+            {{ $mataKuliahs->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection

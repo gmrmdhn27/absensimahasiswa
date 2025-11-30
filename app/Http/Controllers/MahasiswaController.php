@@ -44,22 +44,22 @@ class MahasiswaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->withErrors('Akses ditolak.');
         }
 
-        $riwayatAbsensi = Absensi::where('nim', $mahasiswa->nim)
-            ->with([
+        // Memanfaatkan relasi 'absensi' (singular) dari model Mahasiswa
+        $riwayatAbsensi = $mahasiswa->absensi()
+            ->with([ // Eager load relasi dari Absensi ke Jadwal
                 'jadwal' => [
                     'mataKuliah',
-                    'kelas'
+                    'kelas',
+                    'dosen' // Sekalian load data dosen pengajar
                 ]
-            ])
-            ->orderBy('tanggal_absen', 'desc') // ⭐ Pastikan nama kolom tanggal absensi benar
-            ->paginate(15);
+            ])->orderBy('tanggal_absen', 'desc')->paginate(15);
 
             // dd($riwayatAbsensi->items());
 
         return view('mahasiswa.absensi.index', compact('mahasiswa', 'riwayatAbsensi'));
     }
 
-    public function jadwalKuliah()
+    public function jadwalKuliah(Request $request)
     {
         $mahasiswa = $this->getMahasiswa();
 
@@ -79,13 +79,17 @@ class MahasiswaController extends Controller
         }
 
         // 2. Ambil semua jadwal yang terkait dengan id_kelas tersebut
-        $jadwalKuliah = JadwalKuliah::where('id_kelas', $kelasMahasiswa->id_kelas)
-            ->with(['mataKuliah', 'dosen', 'kelas']) // Eager Load Mata Kuliah dan Dosen
-            ->orderBy('tanggal')
-            ->orderBy('waktu_mulai')
-            ->get(); // Menggunakan get() karena biasanya jadwal tidak terlalu banyak
+        $query = JadwalKuliah::where('id_kelas', $kelasMahasiswa->id_kelas)
+            ->with(['mataKuliah', 'dosen', 'kelas']); // Eager Load Mata Kuliah dan Dosen
 
-        // dd($jadwalKuliah);
+        // Terapkan filter tanggal jika ada input dari request
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        $jadwalKuliah = $query->orderBy('tanggal', 'asc')
+            ->orderBy('waktu_mulai')
+            ->paginate(15)->withQueryString(); // Menggunakan paginate untuk konsistensi
 
         return view('mahasiswa.jadwal-kuliah.index', compact('mahasiswa', 'jadwalKuliah'));
     }

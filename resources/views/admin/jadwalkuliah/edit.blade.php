@@ -71,14 +71,14 @@
 
                 {{-- Dosen --}}
                 <div>
-                    <label for="nip_dosen" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Dosen
+                    <label for="dosen_id" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Dosen
                         Pengajar</label>
-                    <select id="nip_dosen" name="nip_dosen" required
+                    <select id="dosen_id" name="dosen_id" required
                         class="w-full p-2 rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 focus:ring-indigo-500 focus:border-indigo-500 transition mb-2">
                         <option value="">-- Pilih Dosen --</option>
                         @foreach ($dosens as $dosen)
-                            <option value="{{ $dosen->nip }}"
-                                {{ old('nip_dosen', $jadwal->nip) == $dosen->nip ? 'selected' : '' }}>
+                            <option value="{{ $dosen->id }}"
+                                {{ old('dosen_id', $jadwal->dosen->id ?? '') == $dosen->id ? 'selected' : '' }}>
                                 {{ $dosen->nama }} (NIP: {{ $dosen->nip }})
                             </option>
                         @endforeach

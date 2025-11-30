@@ -64,10 +64,16 @@
                                     {{ $loop->iteration + $jadwalKuliahs->firstItem() - 1 }}
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{ $jadwal->mataKuliah->nama_mk ?? 'N/A' }}
+                                    {{-- Mengakses kolom 'nama_mk' dari relasi mataKuliah --}}
+                                    {{ $jadwal->mataKuliah->nama_mk ?? 'Mata Kuliah Tidak Ditemukan' }}
                                 </td>
-                                <td class="px-4 py-3">{{ $jadwal->kelas->nama_kelas ?? 'N/A' }}</td>
-                                <td class="px-4 py-3">{{ $jadwal->dosen->nama ?? 'N/A' }}</td>
+                                <td class="px-4 py-3">
+                                    {{-- Mengakses kolom 'nama_kelas' dari relasi kelas --}}
+                                    {{ $jadwal->kelas->nama_kelas ?? 'Kelas Tidak Ditemukan' }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{-- Mengakses kolom 'nama' dari relasi dosen --}}
+                                    {{ $jadwal->dosen->nama ?? 'Dosen Tidak Ditemukan' }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->tanggal }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->waktu_mulai }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->waktu_selesai }}</td>
@@ -98,7 +104,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $jadwalKuliahs->links('pagination::tailwind') }}
+            {{ $jadwalKuliahs->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection
