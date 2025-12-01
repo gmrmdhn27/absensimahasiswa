@@ -37,11 +37,11 @@
                     <input type="date" id="tanggal" name="tanggal" value="{{ request('tanggal') }}"
                         class="block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
-                <div class="flex items-center gap-2 mt-2 sm:mt-5">
-                    <button type="submit"
+                <div class="flex items-center gap-2 pt-5">
+                    <a href="#" onclick="event.preventDefault(); this.closest('form').submit();"
                         class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Filter
-                    </button>
+                    </a>
                     <a href="{{ route('dosen.jadwal-mengajar') }}"
                         class="inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Reset
@@ -66,6 +66,7 @@
                             <th class="px-4 py-3">Kelas</th>
                             <th class="px-4 py-3">Tanggal</th>
                             <th class="px-4 py-3">Waktu Mulai</th>
+                            <th class="px-4 py-3">Waktu Selesai</th>
                             <th class="px-4 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -94,6 +95,9 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     {{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }} WIB
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ \Carbon\Carbon::parse($jadwal->waktu_selesai)->format('H:i') }} WIB
                                 </td>
                                 <td class="px-4 py-3 text-center">
                                     <a href="{{ route('dosen.form-absensi', $jadwal->id) }}"
@@ -126,7 +130,7 @@
         {{-- Pagination --}}
         <div class="mt-4">
             @if ($jadwals instanceof \Illuminate\Pagination\AbstractPaginator)
-                {{ $jadwals->links() }}
+                {{ $jadwals->links('vendor.pagination.custom') }}
             @endif
         </div>
     </div>

@@ -17,8 +17,8 @@ class MahasiswaController extends Controller
         $user = Auth::user();
         if ($user && $user->role === 'mahasiswa') {
             return Mahasiswa::where('user_id', $user->id)
-                            ->with(['user', 'jurusan']) // Tambahkan with di sini
-                            ->first(); // ⭐ WAJIB: Akhiri query dengan first()
+                            ->with(['user', 'jurusan', 'kelas'])
+                            ->first();
         }
         return null;
     }

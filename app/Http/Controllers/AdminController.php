@@ -124,13 +124,13 @@ class AdminController extends Controller
     }
 
     public function mahasiswaUpdate(Request $request, $id) {
-        // Menggunakan with('user') untuk eager load relasi user
-        $mahasiswa = Mahasiswa::with('user')->findOrFail($id);
-
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        // dd($mahasiswa->toArray());
         $request->validate([
             'nim' => 'required|string|unique:mahasiswas,nim,'.$id,
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$mahasiswa->user_id,
+            'email' => 'required|email|unique:users,email,'.
+            $mahasiswa->user_id,
             "angkatan" => "required|string",
             "id_kelas" => "required|exists:kelas,id",
             "jurusan_id" => "required|exists:jurusans,id"
@@ -145,9 +145,6 @@ class AdminController extends Controller
         if($request->filled("password")) {
             $userData["password"] = Hash::make($request->password);
         }
-
-        $mahasiswa->user->update($userData);
-
         // Update Mahasiswa
         $mahasiswa->update([
             "nim" => $request->nim,
@@ -244,13 +241,13 @@ class AdminController extends Controller
     }
 
     public function dosenUpdate(Request $request, $id) {
-        // Menggunakan with('user') untuk eager load relasi user
-        $dosen = Dosen::with('user')->findOrFail($id);
+        $dosen = Dosen::findOrFail($id);
 
         $request->validate([
             'nip' => 'required|string|unique:dosens,nip,'.$id,
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$dosen->user_id,
+            'email' => 'required|email|unique:users,email,'.
+            $dosen->user_id,
             'departemen' => 'required|string',
         ]);
 
@@ -380,21 +377,17 @@ class AdminController extends Controller
 
     // Jadwal Kuliah
     public function jadwalKuliahIndex() {
+        // Eager loading semua relasi FK
+        $query = JadwalKuliah::with(['mataKuliah' => fn($q) => $q->select('kode_mk', 'nama_mk'), 'kelas', 'dosen']);
+
         // Ambil tanggal dari request, jika tidak ada, gunakan tanggal hari ini.
-        $tanggalFilter = request('tanggal');
+        $tanggalFilter = request('tanggal', now()->toDateString());
 
-        // Eager loading semua relasi dan terapkan filter
-        $query = JadwalKuliah::with(['mataKuliah', 'kelas', 'dosen']);
+        // Terapkan filter berdasarkan tanggal
+        $query->whereDate('tanggal', $tanggalFilter);
 
-        // HANYA terapkan filter tanggal jika pengguna memilihnya
-        if ($tanggalFilter) {
-            $query->whereDate('tanggal', $tanggalFilter);
-        }
-
-        $jadwalKuliahs = $query
-            ->orderBy('waktu_mulai', 'asc')
-            ->paginate(15)
-            ->withQueryString(); // Agar filter tanggal tetap ada saat paginasi
+        // Urutkan berdasarkan waktu mulai
+        $jadwalKuliahs = $query->orderBy('waktu_mulai')->paginate(10);
 
         // Siapkan data FK untuk view filtering/creating
         $mataKuliahs = MataKuliah::all();
@@ -429,21 +422,18 @@ class AdminController extends Controller
 
     public function jadwalKuliahStore(Request $request) {
         $request->validate([
-            "kode_mk"       => "required|exists:mata_kuliahs,kode_mk",
-            "id_kelas"      => "required|exists:kelas,id",
-            'dosen_id'      => "required|exists:dosens,id", // Validasi berdasarkan ID Dosen
-            "tanggal"       => "required|date",
-            "waktu_mulai"   => "required|date_format:H:i",
+            "kode_mk" => "required|exists:mata_kuliahs,kode_mk",
+            "id_kelas" => "required|exists:kelas,id",
+            'nip_dosen' => "required|exists:dosens,nip",
+            "tanggal" => "required|date",
+            "waktu_mulai" => "required|date_format:H:i",
             "waktu_selesai" => "required|date_format:H:i"
         ]);
 
-        // Ambil data Dosen berdasarkan ID yang dikirim dari form
-        $dosen = Dosen::findOrFail($request->dosen_id);
-
         JadwalKuliah::create([
-            "id_mata_kuliah" => $request->kode_mk,
+            "id_mata_kuliah" => $request->kode_mk, // Langsung gunakan kode_mk dari request
             "id_kelas" => $request->id_kelas,
-            "nip" => $dosen->nip, // Simpan NIP dari data dosen yang ditemukan
+            "nip" => $request->nip_dosen,
             "tanggal" => $request->tanggal,
             "waktu_mulai" => $request->waktu_mulai,
             "waktu_selesai" => $request->waktu_selesai,
@@ -457,21 +447,18 @@ class AdminController extends Controller
         $jadwal = JadwalKuliah::findOrFail($id);
 
         $request->validate([
-            "kode_mk"       => "required|exists:mata_kuliahs,kode_mk",
-            "id_kelas"      => "required|exists:kelas,id",
-            "dosen_id"      => "required|exists:dosens,id", // Validasi berdasarkan ID Dosen
-            "tanggal"       => "required|date",
-            "waktu_mulai"   => "required|date_format:H:i",
+            "kode_mk" => "required|exists:mata_kuliahs,kode_mk",
+            "id_kelas" => "required|exists:kelas,id",
+            "nip_dosen" => "required|exists:dosens,nip",
+            "tanggal" => "required|date",
+            "waktu_mulai" => "required|date_format:H:i",
             "waktu_selesai" => "required|date_format:H:i"
         ]);
 
-        // Ambil data Dosen berdasarkan ID yang dikirim dari form
-        $dosen = Dosen::findOrFail($request->dosen_id);
-
         $jadwal->update([
-            "id_mata_kuliah" => $request->kode_mk,
+            "id_mata_kuliah" => $request->kode_mk, // Langsung gunakan kode_mk dari request
             "id_kelas" => $request->id_kelas,
-            "nip" => $dosen->nip, // Simpan NIP dari data dosen yang ditemukan
+            "nip" => $request->nip_dosen,
             "tanggal" => $request->tanggal,
             "waktu_mulai" => $request->waktu_mulai,
             "waktu_selesai" => $request->waktu_selesai

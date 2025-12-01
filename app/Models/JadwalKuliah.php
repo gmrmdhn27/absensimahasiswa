@@ -21,23 +21,37 @@ class JadwalKuliah extends Model
     ];
 
     /**
-     * Mendefinisikan relasi "belongsTo" ke model Dosen.
+     * Relasi ke model MataKuliah.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Foreign Key: 'id_mata_kuliah' di tabel ini.
+     * Owner Key: 'id' di tabel mata_kuliahs.
      */
-    public function dosen()
-    {
-        // Relasi ke tabel 'dosens' menggunakan 'nip' sebagai foreign key dan 'nip' sebagai owner key.
-        return $this->belongsTo(Dosen::class, 'nip', 'nip');
-    }
+     public function mataKuliah()
+     {
+         return $this->belongsTo(MataKuliah::class, 'id_mata_kuliah', 'kode_mk');
+     }
 
-    public function mataKuliah()
-    {
-        return $this->belongsTo(MataKuliah::class, 'id_mata_kuliah', 'kode_mk'); // Relasi ke tabel mata_kuliahs
-    }
-
+    /**
+     * Relasi ke model Kelas.
+     */
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
+
+    /**
+     * Relasi ke model Dosen.
+     */
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'nip', 'nip');
+    }
+
+    /**
+     * Relasi ke model Absensi.
+     */
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'id_jadwal');
     }
 }

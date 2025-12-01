@@ -63,16 +63,142 @@
             </div>
         </div>
 
-        {{-- Info Tambahan --}}
-        <div
-            class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/60 p-6 shadow-sm">
-            <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-3">
-                🧾 Informasi Sistem
+
+
+        {{-- Grafik Statistik --}}
+        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+            <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">
+                📊 Grafik Total Data
             </h4>
-            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                Sistem ini dirancang untuk membantu pengelolaan absensi mahasiswa secara digital.
-                Administrator dapat mengelola data dosen, mahasiswa, mata kuliah, serta memantau absensi harian.
-            </p>
+            <div id="dashboardChart"></div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const seriesData = [
+                {{ $totalMahasiswa }},
+                {{ $totalDosen }},
+                {{ $totalMataKuliah }},
+                {{ $totalAbsensiHariIni }}
+            ];
+
+            const categories = [
+                'Total Mahasiswa',
+                'Total Dosen',
+                'Total Mata Kuliah',
+                'Absensi Hari Ini'
+            ];
+
+            const options = {
+                chart: {
+                    type: 'bar',
+                    height: 380,
+                    toolbar: {
+                        show: false
+                    },
+                    foreColor: document.documentElement.classList.contains('dark') ?
+                        '#cbd5e1' : '#334155',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800
+                    }
+                },
+
+                series: [{
+                    name: 'Jumlah',
+                    data: seriesData
+                }],
+
+                xaxis: {
+                    categories: categories,
+                    labels: {
+                        style: {
+                            fontSize: '13px',
+                            fontWeight: 500
+                        }
+                    }
+                },
+
+                yaxis: {
+                    labels: {
+                        formatter: val => parseInt(val),
+                        style: {
+                            fontSize: '12px'
+                        }
+                    }
+                },
+
+                plotOptions: {
+                    bar: {
+                        columnWidth: '45%',
+                        borderRadius: 10,
+                        distributed: true,
+                        dataLabels: {
+                            position: 'top'
+                        }
+                    }
+                },
+
+                dataLabels: {
+                    enabled: true,
+                    offsetY: -22,
+                    style: {
+                        fontSize: '13px',
+                        fontWeight: '700',
+                        colors: ['#1e293b']
+                    },
+                    background: {
+                        enabled: false,
+                        foreColor: '#1e293b',
+                        padding: 4,
+                        borderRadius: 6,
+                        borderWidth: 1,
+                        borderColor: '#cbd5e1'
+                    }
+                },
+
+                tooltip: {
+                    theme: 'dark',
+                    style: {
+                        fontSize: '13px',
+                        color: '#fff'
+                    },
+                    marker: {
+                        show: true
+                    },
+                    fillSeriesColor: false,
+                    onDatasetHover: {
+                        highlightDataSeries: false
+                    }
+                },
+
+                colors: [
+                    '#6366F1', // indigo
+                    '#10B981', // green
+                    '#0EA5E9', // sky
+                    '#F59E0B' // amber
+                ],
+
+                grid: {
+                    strokeDashArray: 4,
+                    borderColor: document.documentElement.classList.contains('dark') ?
+                        '#334155' : '#e2e8f0'
+                }
+            };
+
+            const chart = new ApexCharts(
+                document.querySelector("#dashboardChart"),
+                options
+            );
+
+            chart.render();
+        });
+    </script>
+@endpush

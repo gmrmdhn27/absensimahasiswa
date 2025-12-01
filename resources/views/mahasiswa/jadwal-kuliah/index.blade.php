@@ -39,6 +39,7 @@
                                 <th class="px-4 py-3">Kelas</th>
                                 <th class="px-4 py-3">Hari / Tanggal</th>
                                 <th class="px-4 py-3">Waktu Mulai</th>
+                                <th class="px-4 py-3">Waktu Selesai</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,10 +61,13 @@
                                         {{ $jadwal->kelas?->nama_kelas ?? 'N/A' }}
                                     </td>
                                     <td class="px-4 py-3">
-                                        {{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('l, d F Y') }}
+                                        {{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('d M Y') }}
                                     </td>
                                     <td class="px-4 py-3">
-                                        {{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }} WIB
+                                        {{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        {{ \Carbon\Carbon::parse($jadwal->waktu_selesai)->format('H:i') }}
                                     </td>
                                 </tr>
                             @endforeach

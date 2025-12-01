@@ -653,9 +653,11 @@ namespace App\Models {
      * @property string $nip
      * @property string $id_mata_kuliah
      * @property int $id
-     * @property-read \App\Models\Dosen $dosen
      * @property-read \App\Models\MataKuliah $mataKuliah
      * @property-read \App\Models\Kelas $kelas
+     * @property-read \App\Models\Dosen $dosen
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Absensi> $absensi
+     * @property-read int|null $absensi_count
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereIdMataKuliah($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JadwalKuliah>|JadwalKuliah whereNip($value)
@@ -1607,7 +1609,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $id_kelas
-     * @property int $nim
+     * @property string $nim
      * @property-read \App\Models\Mahasiswa $mahasiswa
      * @property-read \App\Models\Kelas $kelas
      * @method static \Illuminate\Database\Eloquent\Builder<KelasMahasiswa>|KelasMahasiswa whereNim($value)
@@ -1909,7 +1911,7 @@ namespace App\Models {
      * @method static mixed macroCall($method, $parameters)
      * @mixin \Illuminate\Database\Query\Builder
      */
-    class KelasMahasiswa extends \Illuminate\Database\Eloquent\Model
+    class KelasMahasiswa extends \Illuminate\Database\Eloquent\Relations\Pivot
     {
         //
     }
@@ -1931,7 +1933,8 @@ namespace App\Models {
      * @property-read \App\Models\Jurusan $jurusan
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Kelas> $kelas
      * @property-read int|null $kelas_count
-     * @property-read \App\Models\KelasMahasiswa $kelasMahasiswa
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\KelasMahasiswa> $kelasMahasiswa
+     * @property-read int|null $kelasMahasiswa_count
      * @method static \Illuminate\Database\Eloquent\Builder<Mahasiswa>|Mahasiswa whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Mahasiswa>|Mahasiswa whereNim($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Mahasiswa>|Mahasiswa whereNama($value)
