@@ -3,7 +3,7 @@
 @section('title', 'Tambah Jadwal Kuliah')
 
 @section('content')
-    <div class="space-y-6">
+    <div class="page-wrapper space-y-6">
         {{-- Header --}}
         <div>
             <h3 class="text-2xl font-bold mb-2">➕ Tambah Jadwal Kuliah Baru</h3>

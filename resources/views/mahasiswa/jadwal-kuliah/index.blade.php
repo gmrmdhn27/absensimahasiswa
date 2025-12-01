@@ -3,7 +3,7 @@
 @section('title', 'Jadwal Kuliah')
 
 @section('content')
-    <div class="space-y-6">
+    <div class="page-wrapper space-y-6">
         <div>
             <h3 class="text-2xl font-bold mb-2">📅 Jadwal Kuliah Anda</h3>
             <p class="text-slate-500 dark:text-slate-400">

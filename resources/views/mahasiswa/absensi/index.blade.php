@@ -3,7 +3,7 @@
 @section('title', 'Riwayat Absensi')
 
 @section('content')
-    <div class="space-y-6">
+    <div class="page-wrapper space-y-6">
         <div>
             <h3 class="text-2xl font-bold mb-2">✅ Riwayat Absensi {{ $mahasiswa->nama }}</h3>
             <p class="text-slate-500 dark:text-slate-400">

@@ -3,7 +3,7 @@
 @section('title', 'Manajemen Mahasiswa')
 
 @section('content')
-    <div class="space-y-6">
+    <div class="page-wrapper space-y-6">
         {{-- Header --}}
         <div>
             <h3 class="text-2xl font-bold mb-2">👨‍🎓 Daftar Mahasiswa</h3>

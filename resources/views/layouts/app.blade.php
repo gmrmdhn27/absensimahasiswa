@@ -10,11 +10,12 @@
 
 <body class="h-full flex bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
 
-    <div id="loading-screen"
-        class="fixed inset-0 bg-gray-900 opacity-100 z-[9999] flex items-center justify-center transition-opacity duration-500 ease-out">
-
-        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-400"></div>
+    <div id="page-transition"
+        class="fixed inset-0 bg-gray-900/90 opacity-0 pointer-events-none z-[9998]
+           transition-opacity duration-500 flex items-center justify-center">
+        <div class="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-indigo-400"></div>
     </div>
+
     <div id="app" class="min-h-screen w-full md:flex md:overflow-x-hidden">
 
         {{-- Sidebar desktop --}}
@@ -144,7 +145,7 @@
                     </div>
                 </div>
 
-                <div class="w-full">
+                <div class="page-wrapper w-full">
                     @yield('content')
                 </div>
             </main>
@@ -180,6 +181,39 @@
         </div>
     </div>
 
+    <style>
+        .page-exit-right {
+            animation: exitRight 0.50s ease forwards;
+        }
+
+        @keyframes exitRight {
+            0% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+        }
+
+
+        .page-enter-right {
+            opacity: 0;
+            transform: translateX(50px);
+            animation: enterRight 0.50s ease-out forwards;
+        }
+
+        @keyframes enterRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+
+
     {{-- Script toggle sidebar mobile --}}
     <script>
         const btn = document.getElementById('btn-open-sidebar');
@@ -188,19 +222,6 @@
 
         if (btn) btn.addEventListener('click', () => mobile.classList.remove('-translate-x-full'));
         if (overlay) overlay.addEventListener('click', () => mobile.classList.add('-translate-x-full'));
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const loadingScreen = document.getElementById('loading-screen');
-
-            setTimeout(() => {
-                loadingScreen.classList.remove('opacity-100');
-                loadingScreen.classList.add('opacity-0');
-
-                loadingScreen.addEventListener('transitionend', function() {
-                    loadingScreen.classList.add('hidden');
-                });
-            }, 100);
-        });
 
         // Logika Modal Hapus
         const deleteModal = document.getElementById('delete-modal');
@@ -240,6 +261,30 @@
                 }
             });
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const links = document.querySelectorAll(".sidebar-link");
+            const page = document.querySelector(".page-wrapper");
+
+            const EXIT_CLASS = "page-exit-right"; // ⬅ tinggal ganti
+            const ENTER_CLASS = "page-enter-right"; // ⬅ tinggal ganti
+
+            links.forEach(link => {
+                link.addEventListener("click", function(e) {
+                    const url = this.getAttribute("href");
+                    e.preventDefault();
+
+                    page.classList.add(EXIT_CLASS);
+
+                    setTimeout(() => {
+                        window.location.href = url;
+                    }, 400);
+                });
+            });
+
+            // Ketika halaman tujuan dibuka → animasi masuk
+            page.classList.add(ENTER_CLASS);
+        });
     </script>
     @stack('scripts')
 </body>
