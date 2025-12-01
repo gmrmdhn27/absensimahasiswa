@@ -44,8 +44,13 @@
             {{-- Tabel Mahasiswa --}}
             <div
                 class="rounded-xl overflow-hidden shadow-sm bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <div class="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-3 font-semibold">
-                    Daftar Mahasiswa
+                <div
+                    class="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-3 font-semibold flex justify-between items-center">
+                    <span>Daftar Mahasiswa</span>
+                    <a href="#" id="select-all-hadir"
+                        class="px-3 py-1 text-xs font-medium bg-white/20 hover:bg-white/30 rounded-md transition">
+                        Pilih Semua Hadir
+                    </a>
                 </div>
 
                 <div class="overflow-x-auto w-full">
@@ -70,14 +75,17 @@
                                     <td class="px-4 py-3 text-center">
                                         <div class="flex justify-center flex-wrap gap-3">
                                             @foreach (['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alfa' => 'Alpha'] as $value => $label)
-                                                <label class="inline-flex items-center gap-2">
+                                                <label class="flex items-center gap-2 cursor-pointer">
                                                     <input type="radio" name="status[{{ $mhs->nim }}]"
                                                         value="{{ $value }}"
-                                                        id="{{ $value }}_{{ $mhs->nim }}"
-                                                        class="text-indigo-600 border-slate-300 focus:ring-indigo-500"
+                                                        id="{{ $value }}_{{ $mhs->nim }}" class="hidden peer"
                                                         required>
-                                                    <span
-                                                        class="text-slate-700 dark:text-slate-300 text-sm">{{ $label }}</span>
+
+                                                    <span class="custom-radio"></span>
+
+                                                    <span class="text-slate-700 dark:text-slate-300 text-sm">
+                                                        {{ $label }}
+                                                    </span>
                                                 </label>
                                             @endforeach
                                         </div>
@@ -110,3 +118,68 @@
         </form>
     </div>
 @endsection
+
+<style>
+    /* ==== Custom Radio Button Modern ==== */
+    .custom-radio {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        border: 2px solid #cbd5e1;
+        /* slate-300 */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .custom-radio:hover {
+        border-color: #6366f1;
+        /* indigo-500 */
+    }
+
+    .custom-radio::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: #6366f1;
+        border-radius: 4px;
+        transform: scale(0);
+        transition: 0.2s ease;
+    }
+
+    input[type="radio"]:checked+.custom-radio {
+        border-color: #6366f1;
+        background: #eef2ff;
+        /* indigo-50 */
+    }
+
+    input[type="radio"]:checked+.custom-radio::after {
+        transform: scale(1);
+    }
+</style>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllHadirBtn = document.getElementById('select-all-hadir');
+
+            if (selectAllHadirBtn) {
+                selectAllHadirBtn.addEventListener('click', function(event) {
+                    event.preventDefault(); // Mencegah link berpindah halaman
+
+                    // Dapatkan semua radio button dengan nilai 'hadir'
+                    const hadirRadioButtons = document.querySelectorAll(
+                        'input[type="radio"][value="hadir"]');
+
+                    // Centang setiap radio button 'hadir'
+                    hadirRadioButtons.forEach(radio => {
+                        radio.checked = true;
+                    });
+                });
+            }
+        });
+    </script>
+@endpush
