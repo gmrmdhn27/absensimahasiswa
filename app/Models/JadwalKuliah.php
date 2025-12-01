@@ -8,31 +8,50 @@ use Illuminate\Database\Eloquent\Model;
 class JadwalKuliah extends Model
 {
     use HasFactory;
-    protected $fillable = ["id_mata_kuliah", "id_kelas", "tanggal", "waktu_mulai", "waktu_selesai", "nip"];
-    public function absensi() {
-        return $this->hasMany(Absensi::class, "id_jadwal");
-    }
 
-    public function mataKuliah() {
-        return $this->belongsTo(MataKuliah::class, "id_mata_kuliah", "id");
-    }
+    protected $table = 'jadwal_kuliahs';
 
-    public function dosen() {
-        return $this->belongsTo(Dosen::class, "nip", "nip");
-    }
+    protected $fillable = [
+        'id_mata_kuliah',
+        'id_kelas',
+        'nip',
+        'tanggal',
+        'waktu_mulai',
+        'waktu_selesai',
+    ];
 
-    public function kelas() {
-        return $this->belongsTo(Kelas::class, "id_kelas");
-    }
+    /**
+     * Relasi ke model MataKuliah.
+     *
+     * Foreign Key: 'id_mata_kuliah' di tabel ini.
+     * Owner Key: 'id' di tabel mata_kuliahs.
+     */
+     public function mataKuliah()
+     {
+         return $this->belongsTo(MataKuliah::class, 'id_mata_kuliah', 'kode_mk');
+     }
 
-    // Accessor untuk memformat waktu_mulai menjadi HH:MM
-    public function getWaktuMulaiAttribute($value)
+    /**
+     * Relasi ke model Kelas.
+     */
+    public function kelas()
     {
-        return \Carbon\Carbon::parse($value)->format('H:i');
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
-    // Accessor untuk memformat waktu_selesai menjadi HH:MM
-    public function getWaktuSelesaiAttribute($value)
+
+    /**
+     * Relasi ke model Dosen.
+     */
+    public function dosen()
     {
-        return \Carbon\Carbon::parse($value)->format('H:i');
+        return $this->belongsTo(Dosen::class, 'nip', 'nip');
+    }
+
+    /**
+     * Relasi ke model Absensi.
+     */
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'id_jadwal');
     }
 }

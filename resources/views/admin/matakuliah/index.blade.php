@@ -79,12 +79,12 @@
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <button type="button"
+                                    <a href="#"
                                         class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
                                         data-url="{{ route('admin.matakuliah.destroy', $mk->kode_mk) }}"
                                         data-name="{{ $mk->nama_mk }} ({{ $mk->kode_mk }})">
                                         Hapus
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -101,7 +101,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $mataKuliahs->links('pagination::tailwind') }}
+            {{ $mataKuliahs->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection

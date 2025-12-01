@@ -82,7 +82,7 @@
                         {{-- Asumsi variable $kelas berisi daftar Kelas --}}
                         @foreach ($kelas as $k)
                             <option value="{{ $k->id }}"
-                                {{ old('id_kelas', $mahasiswa->kelasMahasiswa->id_kelas ?? '') == $k->id ? 'selected' : '' }}>
+                                {{ old('id_kelas', $mahasiswa->kelasMahasiswa->first()->id_kelas ?? '') == $k->id ? 'selected' : '' }}>
                                 {{ $k->nama_kelas }} (ID: {{ $k->id }})
                             </option>
                         @endforeach

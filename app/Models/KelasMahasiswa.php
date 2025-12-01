@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class KelasMahasiswa extends Model
+class KelasMahasiswa extends Pivot
 {
     use HasFactory;
 
-    protected $primaryKey = 'nim';
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'kelas_mahasiswas';
 
     protected $fillable = ["nim", "id_kelas"];
 

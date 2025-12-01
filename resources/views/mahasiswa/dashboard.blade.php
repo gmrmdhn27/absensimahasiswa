@@ -33,6 +33,11 @@
                             <td class="py-2 text-slate-900 dark:text-slate-100">: {{ $mahasiswa->nama }}</td>
                         </tr>
                         <tr>
+                            <th class="py-2 pr-4 text-slate-600 dark:text-slate-400 font-medium">Kelas</th>
+                            <td class="py-2 text-slate-900 dark:text-slate-100">:
+                                {{ $mahasiswa->kelas->first()->nama_kelas ?? 'Belum Terdaftar di Kelas' }}</td>
+                        </tr>
+                        <tr>
                             <th class="py-2 pr-4 text-slate-600 dark:text-slate-400 font-medium">Email</th>
                             <td class="py-2 text-slate-900 dark:text-slate-100">: {{ $mahasiswa->user?->email ?? 'N/A' }}
                             </td>

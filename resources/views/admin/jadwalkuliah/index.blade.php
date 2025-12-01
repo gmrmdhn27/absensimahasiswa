@@ -68,20 +68,22 @@
                                 </td>
                                 <td class="px-4 py-3">{{ $jadwal->kelas->nama_kelas ?? 'N/A' }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->dosen->nama ?? 'N/A' }}</td>
-                                <td class="px-4 py-3">{{ $jadwal->tanggal }}</td>
-                                <td class="px-4 py-3">{{ $jadwal->waktu_mulai }}</td>
-                                <td class="px-4 py-3">{{ $jadwal->waktu_selesai }}</td>
+                                <td class="px-4 py-3">
+                                    {{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('d M Y') }}</td>
+                                <td class="px-4 py-3">{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}</td>
+                                <td class="px-4 py-3">{{ \Carbon\Carbon::parse($jadwal->waktu_selesai)->format('H:i') }}
+                                </td>
                                 <td class="px-4 py-3 text-center space-x-2">
                                     <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <button type="button"
+                                    <a href="#"
                                         class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
                                         data-url="{{ route('admin.jadwal.destroy', $jadwal->id) }}"
                                         data-name="Jadwal {{ $jadwal->mataKuliah->nama_mk ?? 'N/A' }} kelas {{ $jadwal->kelas->nama_kelas ?? 'N/A' }}">
                                         Hapus
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -98,7 +100,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $jadwalKuliahs->links('pagination::tailwind') }}
+            {{ $jadwalKuliahs->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection

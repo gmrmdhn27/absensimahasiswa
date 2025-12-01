@@ -113,12 +113,12 @@
                                         class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
                                         Edit
                                     </a>
-                                    <button type="button"
+                                    <a href="#"
                                         class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
                                         data-url="{{ route('admin.mahasiswa.destroy', $mhs->id) }}"
                                         data-name="{{ $mhs->nama }}">
                                         Hapus
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -139,7 +139,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $mahasiswas->links('pagination::tailwind') }}
+            {{ $mahasiswas->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection

@@ -82,7 +82,7 @@
 
                 {{-- Pagination --}}
                 <div class="p-4 border-t border-slate-200 dark:border-slate-700">
-                    {{ $riwayatAbsensi->links('pagination::tailwind') }}
+                    {{ $riwayatAbsensi->links('vendor.pagination.custom') }}
                 </div>
             </div>
         @endif

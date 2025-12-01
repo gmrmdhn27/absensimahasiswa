@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\DashboardController; // Tambahkan ini
 // Tambahkan controller untuk Dosen dan Mahasiswa
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
@@ -26,7 +27,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Rute Dashboard
-    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // --- 👨‍🎓 Manajemen Mahasiswa ---
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {

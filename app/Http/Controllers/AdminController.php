@@ -378,7 +378,7 @@ class AdminController extends Controller
     // Jadwal Kuliah
     public function jadwalKuliahIndex() {
         // Eager loading semua relasi FK
-        $query = JadwalKuliah::with(['mataKuliah', 'kelas', 'dosen']);
+        $query = JadwalKuliah::with(['mataKuliah' => fn($q) => $q->select('kode_mk', 'nama_mk'), 'kelas', 'dosen']);
 
         // Ambil tanggal dari request, jika tidak ada, gunakan tanggal hari ini.
         $tanggalFilter = request('tanggal', now()->toDateString());
@@ -430,17 +430,10 @@ class AdminController extends Controller
             "waktu_selesai" => "required|date_format:H:i"
         ]);
 
-        $mataKuliah = MataKuliah::where('kode_mk', $request->kode_mk)->first();
-
-        if (!$mataKuliah) {
-            // Ini seharusnya sudah tertangkap oleh validasi exists:mata_kuliahs,kode_mk
-            return back()->withInput()->withErrors(['kode_mk' => 'Kode Mata Kuliah tidak ditemukan.']);
-        }
-
         JadwalKuliah::create([
-            "id_mata_kuliah" => $mataKuliah->id,
+            "id_mata_kuliah" => $request->kode_mk, // Langsung gunakan kode_mk dari request
             "id_kelas" => $request->id_kelas,
-            "nip" => $request->nip_dosen, // ✅ Menggunakan NIP Dosen yang sedang login
+            "nip" => $request->nip_dosen,
             "tanggal" => $request->tanggal,
             "waktu_mulai" => $request->waktu_mulai,
             "waktu_selesai" => $request->waktu_selesai,
@@ -453,8 +446,6 @@ class AdminController extends Controller
     public function jadwalKuliahUpdate(Request $request, $id) {
         $jadwal = JadwalKuliah::findOrFail($id);
 
-        $mataKuliah = MataKuliah::where('kode_mk', $request->kode_mk)->firstOrFail();
-
         $request->validate([
             "kode_mk" => "required|exists:mata_kuliahs,kode_mk",
             "id_kelas" => "required|exists:kelas,id",
@@ -465,7 +456,7 @@ class AdminController extends Controller
         ]);
 
         $jadwal->update([
-            "id_mata_kuliah" => $mataKuliah->id,
+            "id_mata_kuliah" => $request->kode_mk, // Langsung gunakan kode_mk dari request
             "id_kelas" => $request->id_kelas,
             "nip" => $request->nip_dosen,
             "tanggal" => $request->tanggal,
