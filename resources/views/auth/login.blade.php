@@ -13,6 +13,8 @@
     <!-- Rain Canvas Background -->
     <div id="rain-container" class="absolute inset-0 pointer-events-none"></div>
 
+    <div id="glass-pulse"></div>
+
     <!-- Login Card -->
     <div
         class="relative z-10 w-full max-w-md p-8
@@ -82,29 +84,7 @@
     </div>
 
 
-    <!-- Snow Script -->
-    <script>
-        const rainContainer = document.getElementById("rain-container");
 
-        function createSnow() {
-            const snow = document.createElement("div");
-            const size = Math.random() * 4 + 2;
-            const posX = Math.random() * window.innerWidth;
-            const duration = Math.random() * 3 + 4;
-
-            snow.classList.add("snowflake");
-            snow.style.width = `${size}px`;
-            snow.style.height = `${size}px`;
-            snow.style.left = `${posX}px`;
-            snow.style.animationDuration = `${duration}s`;
-
-            rainContainer.appendChild(snow);
-
-            setTimeout(() => snow.remove(), duration * 1000);
-        }
-
-        setInterval(createSnow, 120);
-    </script>
 
     <style>
         .snowflake {
@@ -201,8 +181,64 @@
                 opacity: 0;
             }
         }
+
+        .smoke {
+            position: fixed;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            filter: blur(10px);
+            pointer-events: none;
+            animation: smokeFade 1s ease-out forwards;
+        }
+
+        @keyframes smokeFade {
+            0% {
+                opacity: 0.8;
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-10px, -20px) scale(2);
+            }
+        }
     </style>
 
+    <!-- Snow Script -->
+    <script>
+        const rainContainer = document.getElementById("rain-container");
+
+        function createSnow() {
+            const snow = document.createElement("div");
+            const size = Math.random() * 4 + 2;
+            const posX = Math.random() * window.innerWidth;
+            const duration = Math.random() * 3 + 4;
+
+            snow.classList.add("snowflake");
+            snow.style.width = `${size}px`;
+            snow.style.height = `${size}px`;
+            snow.style.left = `${posX}px`;
+            snow.style.animationDuration = `${duration}s`;
+
+            rainContainer.appendChild(snow);
+
+            setTimeout(() => snow.remove(), duration * 1000);
+        }
+
+        setInterval(createSnow, 120);
+
+        document.addEventListener("mousemove", (e) => {
+            const sm = document.createElement("div");
+            sm.className = "smoke";
+            sm.style.left = e.clientX + "px";
+            sm.style.top = e.clientY + "px";
+
+            document.body.appendChild(sm);
+            setTimeout(() => sm.remove(), 1000);
+        });
+    </script>
 
 </body>
 
