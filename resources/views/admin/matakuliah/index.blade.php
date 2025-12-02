@@ -73,17 +73,15 @@
                                     {{ $mk->kode_mk }}
                                 </td>
                                 <td class="px-4 py-3">{{ $mk->nama_mk }}</td>
-                                <td class="px-4 py-3 text-center">{{ $mk->sks }}</td>
-                                <td class="px-4 py-3 text-center space-x-2">
-                                    <a href="{{ route('admin.matakuliah.edit', $mk->kode_mk) }}"
-                                        class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
-                                        Edit
+                                <td class="px-4 py-3">{{ $mk->sks }}</td>
+                                <td class="px-4 py-3 text-center space-x-2 flex align-items-center justify-center">
+                                    <a href="{{ route('admin.matakuliah.edit', $mk->kode_mk) }}" class="mr-5">
+                                        <i data-feather="edit" class="text-blue-600"></i>
                                     </a>
-                                    <a href="#"
-                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                    <a href="#" class="open-delete-modal"
                                         data-url="{{ route('admin.matakuliah.destroy', $mk->kode_mk) }}"
                                         data-name="{{ $mk->nama_mk }} ({{ $mk->kode_mk }})">
-                                        Hapus
+                                        <i data-feather="trash" class="text-red-600"></i>
                                     </a>
                                 </td>
                             </tr>

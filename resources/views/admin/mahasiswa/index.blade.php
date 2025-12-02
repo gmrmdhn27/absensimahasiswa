@@ -108,16 +108,14 @@
                                 <td class="px-4 py-3">{{ $mhs->user?->email ?? 'N/A' }}</td>
                                 <td class="px-4 py-3">{{ $mhs->angkatan }}</td>
                                 <td class="px-4 py-3">{{ $mhs->jurusan?->nama_jurusan ?? 'N/A' }}</td>
-                                <td class="px-4 py-3 text-center space-x-2">
-                                    <a href="{{ route('admin.mahasiswa.edit', $mhs->id) }}"
-                                        class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
-                                        Edit
+                                <td class="px-4 py-3 text-center space-x-2 flex align-items-center justify-center">
+                                    <a href="{{ route('admin.mahasiswa.edit', $mhs->id) }}" class="mr-5">
+                                        <i data-feather="edit" class="text-blue-600"></i>
                                     </a>
-                                    <a href="#"
-                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                    <a href="#" class="open-delete-modal"
                                         data-url="{{ route('admin.mahasiswa.destroy', $mhs->id) }}"
                                         data-name="{{ $mhs->nama }}">
-                                        Hapus
+                                        <i data-feather="trash" class="text-red-600"></i>
                                     </a>
                                 </td>
                             </tr>

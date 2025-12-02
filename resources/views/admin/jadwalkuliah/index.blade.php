@@ -73,16 +73,14 @@
                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}</td>
                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($jadwal->waktu_selesai)->format('H:i') }}
                                 </td>
-                                <td class="px-4 py-3 text-center space-x-2">
-                                    <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
-                                        class="inline-block px-3 py-1 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition">
-                                        Edit
+                                <td class="px-4 py-3 text-center space-x-2 flex align-items-center justify-center">
+                                    <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}" class="mr-5">
+                                        <i data-feather="edit" class="text-blue-600"></i>
                                     </a>
-                                    <a href="#"
-                                        class="open-delete-modal px-3 py-1 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition"
+                                    <a href="#" class="open-delete-modal"
                                         data-url="{{ route('admin.jadwal.destroy', $jadwal->id) }}"
                                         data-name="Jadwal {{ $jadwal->mataKuliah->nama_mk ?? 'N/A' }} kelas {{ $jadwal->kelas->nama_kelas ?? 'N/A' }}">
-                                        Hapus
+                                        <i data-feather="trash" class="text-red-600"></i>
                                     </a>
                                 </td>
                             </tr>

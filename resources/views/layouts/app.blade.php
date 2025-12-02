@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Absensi | @yield('title')</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
     @vite('resources/css/app.css')
 </head>
 
@@ -287,6 +288,10 @@
         });
     </script>
     @stack('scripts')
+    <script>
+        feather.replace();
+    </script>
+
 </body>
 
 </html>
